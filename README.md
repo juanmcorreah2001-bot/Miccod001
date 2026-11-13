@@ -1,32 +1,107 @@
-# Miccod001
-# LGII-T1
+# Gestor de Archivos con Google Drive (LPII 2026)
 
-## Prácticas de Lenguaje 2 — Conexión Drive & Colab
+Módulo en Python estructurado que monta Google Drive en Google Colab, explora un directorio configurado mediante constantes y procesa archivos de datos `.json` y `.csv`.
 
-### 📌 Descripción del Proyecto
+## 🎯 Objetivo
 
-Módulo en Python diseñado para **Google Colab** que permite montar unidades de **Google Drive**, explorar directorios específicos configurados mediante constantes y listar el contenido de carpetas de forma modular y segura[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span).
+Desarrollar un módulo modular que:
 
----
+- Monte Google Drive.
+- Explore un directorio definido por constantes.
+- Filtre y procese archivos de datos.
+- Retorne un diccionario estructurado, listo para ser consumido por una API.
 
-### ✨ Funcionalidades Principales
+## 📋 Ponderación
 
-| # | Requisito | 🛠️ Implementación |
-| :---: | :--- | :--- |
-| 1 | **Conexión con Drive** | Montaje de la unidad personal en `/content/drive/MyDrive` dentro del entorno de Google Colab[span_6](start_span)[span_6](end_span). |
-| 2 | **Ruta Configurable** | Definición mediante la constante `DIRECTORIO` para apuntar directamente a la carpeta raíz o subcarpetas específicas[span_7](start_span)[span_7](end_span). |
-| 3 | **Listado Modular** | Implementación de la función `list_files_in_directory(directorio)` utilizando `os.listdir()` para recorrer e imprimir cada archivo o carpeta[span_8](start_span)[span_8](end_span). |
-| 4 | **Salida Estructurada** | Visualización clara en consola de los elementos encontrados dentro de la ruta especificada[span_9](start_span)[span_9](end_span). |
+| Concepto | Valor |
+|---|---|
+| Escala | 0 a 20 puntos |
+| Ponderación en planificación | 10% de la nota final |
+| Aporte neto a la nota definitiva | 2.0 puntos |
 
-> 🛡️ **Manejo de Excepciones Integrado:** Controla errores comunes de ejecución como rutas inexistentes o unidades no montadas (`FileNotFoundError`), mostrando un mensaje limpio (`Directorio no encontrado.`) sin detener abruptamente el programa[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span).
+## ✅ Requisitos implementados
 
----
+1. **Filtrado selectivo:** solo se listan archivos con extensión `.json` o `.csv` (constante `EXTENSIONES_PERMITIDAS`).
+2. **Metadatos:** tamaño en KB (`os.path.getsize`) y fecha de última modificación (`os.path.getmtime`).
+3. **Parseo estructurado:** si existe `inventario.json`, se lee con `json.load()` y se valida que sea una lista de registros.
+4. **Retorno modular:** la función `list_files_in_directory()` devuelve un diccionario en memoria.
 
-### 🗂️ Estructura del Repositorio
+## 📁 Estructura
 
-```text
-📦 LGII-T1
- ├── 📓 practica_drive.ipynb
- ├── 📜 LICENSE
- ├── 🙈 .gitignore
- └── 📘 README.md
+```
+.
+├── gestor_archivos.py   # Módulo principal
+└── README.md
+```
+
+## ⚙️ Configuración
+
+Las constantes están al inicio de `gestor_archivos.py`:
+
+```python
+PUNTO_MONTAJE = '/content/drive'
+DIRECTORIO = '/content/drive/My Drive/LPII_2026'
+EXTENSIONES_PERMITIDAS = ('.json', '.csv')
+ARCHIVO_INVENTARIO = 'inventario.json'
+```
+
+## 🚀 Uso
+
+### En Google Colab
+
+1. Sube `gestor_archivos.py` a Colab (o clona el repositorio).
+2. Crea en tu Drive la carpeta `LPII_2026` con tus archivos `.json` / `.csv`.
+3. Ejecuta:
+
+```python
+from gestor_archivos import main
+resultado = main()
+```
+
+También puedes llamar solo a la función:
+
+```python
+from gestor_archivos import montar_drive, list_files_in_directory, DIRECTORIO
+
+montar_drive()
+resultado = list_files_in_directory(DIRECTORIO)
+```
+
+## 📤 Estructura del diccionario retornado
+
+```json
+{
+  "directorio": "/content/drive/My Drive/LPII_2026",
+  "estado": "ok",
+  "mensaje": "2 archivo(s) encontrado(s).",
+  "extensiones_filtradas": [".json", ".csv"],
+  "total_archivos": 2,
+  "archivos": [
+    {
+      "nombre": "inventario.json",
+      "extension": ".json",
+      "tamano_kb": 1.25,
+      "ultima_modificacion": "2026-11-13 10:30:00"
+    }
+  ],
+  "inventario": {
+    "encontrado": true,
+    "valido": true,
+    "total_registros": 5,
+    "registros": [],
+    "error": null
+  }
+}
+```
+
+## 🛡️ Manejo de excepciones
+
+- `FileNotFoundError`: directorio inexistente.
+- `NotADirectoryError`: la ruta no es un directorio.
+- `PermissionError`: sin permisos de lectura.
+- `json.JSONDecodeError`: `inventario.json` mal formado.
+- `ImportError`: ejecución fuera de Colab (se omite el montaje).
+
+## 👩‍💻 Autora
+
+Elianny — UNEFA, Núcleo Apure — Lenguaje de Programación II
