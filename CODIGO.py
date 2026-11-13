@@ -1,30 +1,15 @@
-"""
-Módulo: gestor_archivos.py
-Materia: Lenguaje de Programación II (LPII) - UNEFA
 
-Monta Google Drive (Google Colab), explora un directorio configurado mediante
-constantes, filtra archivos .json / .csv, calcula metadatos y valida un
-archivo inventario.json. Retorna un diccionario estructurado listo para ser
-consumido por una API.
-"""
 
 import json
 import os
 from datetime import datetime
 
-# ---------------------------------------------------------------------------
-# CONSTANTES DE CONFIGURACIÓN
-# ---------------------------------------------------------------------------
 PUNTO_MONTAJE = '/content/drive'
 DIRECTORIO = '/content/drive/My Drive/LPII_2026'
 EXTENSIONES_PERMITIDAS = ('.json', '.csv')
 ARCHIVO_INVENTARIO = 'inventario.json'
 FORMATO_FECHA = '%Y-%m-%d %H:%M:%S'
 
-
-# ---------------------------------------------------------------------------
-# 1. MONTAJE DE GOOGLE DRIVE
-# ---------------------------------------------------------------------------
 def montar_drive():
     """Monta Google Drive si se ejecuta en Google Colab."""
     try:
@@ -35,10 +20,6 @@ def montar_drive():
         print('Aviso: no se está ejecutando en Google Colab; se omite el montaje.')
         return False
 
-
-# ---------------------------------------------------------------------------
-# 2. FUNCIONES AUXILIARES
-# ---------------------------------------------------------------------------
 def obtener_metadatos(ruta):
     """Devuelve el tamaño en KB y la fecha de última modificación de un archivo."""
     tamano_kb = round(os.path.getsize(ruta) / 1024, 2)
@@ -79,9 +60,6 @@ def validar_inventario(ruta):
     return resultado
 
 
-# ---------------------------------------------------------------------------
-# 3. FUNCIÓN PRINCIPAL MODULAR
-# ---------------------------------------------------------------------------
 def list_files_in_directory(directorio, extensiones=EXTENSIONES_PERMITIDAS):
     """
     Explora un directorio, filtra por extensión, calcula metadatos y valida
@@ -180,10 +158,6 @@ def list_files_in_directory(directorio, extensiones=EXTENSIONES_PERMITIDAS):
 
     return respuesta
 
-
-# ---------------------------------------------------------------------------
-# 4. PUNTO DE ENTRADA
-# ---------------------------------------------------------------------------
 def main():
     montar_drive()
     resultado = list_files_in_directory(DIRECTORIO)
